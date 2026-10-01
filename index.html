@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mate Energy Industries Ltd. - Lubricant Tank Stock Level</title>
+<meta name="theme-color" content="#8e3a73">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4f7f6;color:#333;display:flex;flex-direction:column;min-height:100vh}
+.company-header{background:#fff;color:#4a1f3d;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 15px rgba(0,0,0,.1);flex-wrap:wrap;gap:16px;border-bottom:5px solid #00aeef}
+.logo-section{display:flex;align-items:center;gap:20px}
+.logo-img{display:block;width:min(520px,100%);height:auto}
+
+.company-info p{margin-top:6px;font-size:14px;color:#8e3a73;font-style:italic}
+
+.header-badge{background:#f8eef4;color:#4a1f3d;padding:12px 20px;border-radius:8px;font-size:13px;text-align:right;border:1px solid #e3c7d8}
+.header-badge strong{display:block;font-size:15px;margin-bottom:3px;color:#8e3a73}
+.mgr-login{margin-top:8px;background:#8e3a73;color:#fff;border:0;border-radius:6px;padding:7px 14px;font-weight:700;cursor:pointer;font-size:13px}
+.main-content{flex:1;padding:25px;display:flex;flex-direction:column}
+.page-title{text-align:center;margin-bottom:25px}
+.page-title h2{color:#8e3a73;font-size:24px}
+.page-title p{color:#666;margin-top:5px}
+.control-panel{background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.06);width:100%;max-width:1200px;margin:0 auto 20px;display:flex;flex-wrap:wrap;gap:15px;align-items:flex-end;border-top:4px solid #007fb8}
+.form-group{flex:1;min-width:200px}
+label{display:block;margin-bottom:8px;font-weight:600;color:#444;font-size:14px}
+select,input{width:100%;padding:12px;font-size:16px;border:2px solid #ddd;border-radius:8px;transition:border-color .3s}
+input:focus,select:focus{outline:none;border-color:#007fb8}
+button:focus-visible{outline:3px solid #00aeef;outline-offset:2px}
+.btn{padding:12px 24px;font-size:16px;font-weight:700;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:all .2s;height:48px}
+.btn-upload{background:#007fb8}.btn-upload:hover{background:#006590}
+.btn-edit{background:#8e3a73}.btn-edit:hover{background:#6e2c59}
+.btn-delete{background:#dc3545}.btn-delete:hover{background:#c82333}
+.btn-calc{background:#8e3a73;width:100%;margin-top:15px;font-size:18px;height:55px}.btn-calc:hover{background:#6e2c59}
+.btn-save{background:#00aeef;color:#12202b;width:100%;margin-top:10px;font-weight:800}.btn-save:hover{background:#0098d4}
+.status-msg{width:100%;text-align:center;font-weight:600;min-height:20px}
+.success{color:#007fb8}.error{color:#dc3545}
+.mgr-only{display:none}
+body.mgr .mgr-only{display:block}
+body.mgr .control-panel .mgr-only{display:inline-block}
+body.mgr .chart-panel.mgr-only{display:flex}
+.workspace{display:flex;gap:20px;width:100%;max-width:1200px;margin:0 auto;flex:1}
+body:not(.mgr) .workspace{max-width:560px}
+.chart-panel{flex:2;background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.06);overflow:hidden;flex-direction:column;min-height:600px}
+.panel-header{background:#8e3a73;color:#fff;padding:15px;font-weight:700;font-size:18px}
+#pdfViewer{width:100%;flex:1;border:none;background:#525659}
+.empty-state{display:flex;flex:1;justify-content:center;align-items:center;color:#888;font-size:18px;text-align:center;padding:40px}
+.calc-panel{flex:1;background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.06);padding:25px;display:flex;flex-direction:column;border-top:4px solid #00aeef;min-height:420px}
+.calc-header{background:#007fb8;color:#fff;padding:15px;font-weight:700;font-size:18px;border-radius:8px;text-align:center;margin-bottom:20px}
+.setup-mode{background:#e6f6fd;border-left:4px solid #00aeef;padding:15px;border-radius:6px;margin-bottom:15px;font-size:14px;color:#0b5470}
+.data-row{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+.data-row input{flex:1}
+.remove-row{background:#dc3545;color:#fff;border:none;width:35px;height:35px;border-radius:50%;cursor:pointer;font-size:18px;flex:none}
+.calc-result{margin-top:20px;background:#e8f4f8;padding:25px;border-radius:10px;text-align:center;border:2px solid #8e3a73;display:none}
+.calc-result.bad{background:#fdecea;border-color:#dc3545}
+.calc-result.bad h2{color:#dc3545;font-size:20px}
+.calc-result h2{color:#8e3a73;font-size:36px}
+.calc-result p{margin-top:8px;color:#555;font-size:14px;white-space:pre-line}
+.center-msg{display:none;flex:1;justify-content:center;align-items:center;color:#888;text-align:center}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.footer{margin-top:20px;font-size:13px;color:#666;text-align:center;padding:20px;background:#fff;border-top:2px solid #e9ecef}
+.footer strong{color:#8e3a73}
+#fileInput,#importInput{display:none}
+dialog{margin:auto;border:0;border-radius:12px;padding:24px;width:min(340px,92vw);box-shadow:0 10px 40px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(74,31,61,.6)}
+dialog h3{color:#8e3a73;margin-bottom:6px}
+dialog p{font-size:14px;color:#666;margin-bottom:12px}
+dialog .tools{justify-content:flex-end}
+@media(max-width:768px){.workspace{flex-direction:column}.chart-panel{min-height:400px}.company-header{padding:15px 20px}.main-content{padding:15px}}
+</style>
+</head>
+<body>
+<div class="company-header">
+ <div class="logo-section">
+  <div class="company-info">
+   <img class="logo-img" alt="Mate Energy Industries Ltd." src="data:image/png;base64,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">
+   <p>"Your premier source of high-quality lubricants"</p>
+  </div>
+ </div>
+ <div class="header-badge">
+  <strong>Warehouse Operations</strong>Tank Level Monitoring System
+  <div><button class="mgr-login" id="mgrBtn" onclick="toggleManager()">🔐 Manager login</button></div>
+ </div>
+</div>
+
+<div class="main-content">
+ <div class="page-title">
+  <h2>🛢️ Lubricant Tank Stock Level</h2>
+  <p>Select Tank ➡️ Enter Dip Reading ➡️ Get Exact Liters</p>
+ </div>
+
+ <div class="control-panel">
+  <div class="form-group">
+   <label for="tankSelect">Select Tank:</label>
+   <select id="tankSelect" onchange="selectTank()">
+    <option value="">-- Choose a Tank --</option>
+    <optgroup label="Main tank farms">
+     <option value="Tank_1">Main Tank Farm 1</option>
+     <option value="Tank_2">Main Tank Farm 2</option>
+    </optgroup>
+    <optgroup label="Horizontal tanks">
+     <option value="Tank_3">Horizontal Tank 3</option>
+     <option value="Tank_4">Horizontal Tank 4</option>
+     <option value="Tank_5">Horizontal Tank 5</option>
+     <option value="Tank_6">Horizontal Tank 6</option>
+    </optgroup>
+   </select>
+  </div>
+  <button class="btn btn-upload mgr-only" onclick="document.getElementById('fileInput').click()">📤 Upload / Update PDF</button>
+  <button class="btn btn-edit mgr-only" onclick="editChart()">✏️ Edit Chart Values</button>
+  <button class="btn btn-delete mgr-only" onclick="deleteTankData()">🗑️ Delete Tank Data</button>
+  <input type="file" id="fileInput" accept="application/pdf" onchange="uploadPDF(event)">
+  <div class="status-msg" id="statusMsg" role="status"></div>
+ </div>
+
+ <div class="workspace">
+  <div class="chart-panel mgr-only">
+   <div class="panel-header" id="viewerHeader">📄 Tank Chart Viewer (manager only)</div>
+   <div style="display:flex;flex:1;flex-direction:column">
+    <div class="empty-state" id="emptyState">Select a tank to view its chart.</div>
+    <iframe id="pdfViewer" title="Tank chart PDF" style="display:none"></iframe>
+   </div>
+  </div>
+
+  <div class="calc-panel">
+   <div class="calc-header" id="calcHeader">🧮 Calculator</div>
+
+   <div class="center-msg" id="selectTankMsg"><div><p style="font-size:40px">👆</p><p>Please select a tank to begin.</p></div></div>
+   <div class="center-msg" id="noDataMsg"><div><p style="font-size:40px">⚠️</p><p>Chart values have not been set for this tank.<br>Please ask the manager.</p></div></div>
+
+   <div id="workerView" style="display:none;flex:1;flex-direction:column">
+    <div class="form-group" style="flex:none">
+     <label for="dipReading">Enter Your Dip Reading:</label>
+     <input type="number" id="dipReading" inputmode="decimal" placeholder="e.g., 968" min="0" step="any" style="font-size:24px;text-align:center;height:60px;font-weight:700;color:#8e3a73">
+    </div>
+    <button class="btn btn-calc" onclick="calculateLiters()">Calculate Exact Liters</button>
+    <div class="calc-result" id="calcResult" aria-live="polite">
+     <h2 id="resultText"></h2>
+     <p id="resultDetails"></p>
+    </div>
+   </div>
+
+   <div id="managerView" style="display:none;flex:1;flex-direction:column">
+    <div class="setup-mode"><strong>⚙️ Manager Setup:</strong> Enter the fixed chart values (readings ending in 0). Workers get the in-between readings automatically.</div>
+    <div id="dataRowsContainer" style="flex:1;overflow-y:auto;margin-bottom:15px"></div>
+    <button class="btn" style="background:#6c757d;width:100%;margin-bottom:10px" onclick="addDataRow()">+ Add Chart Value Row</button>
+    <button class="btn btn-save" onclick="saveChartData()">💾 Save Chart Data &amp; Activate Worker View</button>
+   </div>
+
+   <div class="tools mgr-only">
+    <button class="btn btn-edit" style="height:40px;font-size:14px" onclick="exportBackup()">⬇️ Backup chart values</button>
+    <button class="btn btn-edit" style="height:40px;font-size:14px" onclick="document.getElementById('importInput').click()">⬆️ Restore backup</button>
+    <button class="btn btn-edit" style="height:40px;font-size:14px" onclick="changePin()">🔑 Change PIN</button>
+    <input type="file" id="importInput" accept="application/json" onchange="importBackup(event)">
+   </div>
+  </div>
+ </div>
+
+ <div class="footer">
+  <strong>Mate Energy Industries Limited</strong> | Warehouse Management System<br>
+  Created by IIP 2026
+ </div>
+</div>
+
+<dialog id="pinDlg">
+ <h3 id="pinTitle">Manager login</h3>
+ <p id="pinHelp"></p>
+ <input type="password" id="pinInput" inputmode="numeric" autocomplete="off" aria-label="PIN">
+ <div class="status-msg error" id="pinErr" style="margin-top:8px"></div>
+ <div class="tools"><button class="btn btn-delete" style="height:42px" onclick="pinDlg.close()">Cancel</button><button class="btn btn-upload" style="height:42px" id="pinOk">OK</button></div>
+</dialog>
+
+<script>
+const DB_NAME = "MateEnergyVaultDB";
+const PIN_KEY = "mate-manager-pin";
+let db, currentTank = "", isMgr = false, editing = false, pdfUrl = null;
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* ---------- Database ---------- */
+window.onload = () => {
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+  const req = indexedDB.open(DB_NAME, 2);
+  req.onupgradeneeded = e => {
+    const d = e.target.result;
+    if (!d.objectStoreNames.contains('pdfs')) d.createObjectStore('pdfs');
+    if (!d.objectStoreNames.contains('data')) d.createObjectStore('data');
+  };
+  req.onsuccess = e => { db = e.target.result; render(); };
+  req.onerror = () => showStatus("This browser blocked storage. Use a normal (non-private) window.", "error");
+};
+const dbGet = (store, key) => new Promise(res => {
+  const r = db.transaction(store, 'readonly').objectStore(store).get(key);
+  r.onsuccess = () => res(r.result); r.onerror = () => res(undefined);
+});
+const dbPut = (store, val, key) => new Promise((res, rej) => {
+  const t = db.transaction(store, 'readwrite'); t.objectStore(store).put(val, key);
+  t.oncomplete = res; t.onerror = () => rej(t.error);
+});
+const dbDel = (store, key) => new Promise(res => {
+  const t = db.transaction(store, 'readwrite'); t.objectStore(store).delete(key); t.oncomplete = res;
+});
+
+/* ---------- Manager PIN ---------- */
+async function sha(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("mate:" + s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+const storedPin = () => { try { return localStorage.getItem(PIN_KEY); } catch (e) { return null; } };
+function askPin(title, help, onOk) {
+  pinTitle.textContent = title; pinHelp.textContent = help;
+  pinInput.value = ""; pinErr.textContent = "";
+  pinOk.onclick = async () => { const ok = await onOk(pinInput.value); if (ok) pinDlg.close(); };
+  pinDlg.showModal(); pinInput.focus();
+}
+pinInput.addEventListener("keydown", e => { if (e.key === "Enter") pinOk.click(); });
+function toggleManager() {
+  if (isMgr) { isMgr = false; editing = false; mgrBtn.textContent = "🔐 Manager login"; render(); return; }
+  if (!storedPin()) return createPin(true);
+  askPin("Manager login", "Enter the manager PIN.", async p => {
+    if (await sha(p) === storedPin()) { setManager(); return true; }
+    pinErr.textContent = "Wrong PIN. Try again."; return false;
+  });
+}
+function createPin(thenLogin) {
+  askPin("Create manager PIN", "Choose a PIN of at least 4 digits. Only the manager should know it.", async p => {
+    if (!/^\d{4,}$/.test(p)) { pinErr.textContent = "PIN must be at least 4 digits."; return false; }
+    try { localStorage.setItem(PIN_KEY, await sha(p)); } catch (e) { pinErr.textContent = "Browser blocked saving the PIN."; return false; }
+    if (thenLogin) setManager(); else showStatus("PIN changed.", "success");
+    return true;
+  });
+}
+const changePin = () => createPin(false);
+function setManager() { isMgr = true; mgrBtn.textContent = "🔓 Log out manager"; render(); }
+
+/* ---------- Views ---------- */
+function selectTank() { currentTank = tankSelect.value; editing = false; calcResult.style.display = 'none'; dipReading.value = ''; render(); }
+function editChart() { if (currentTank) { editing = true; render(); } }
+
+async function render() {
+  if (!db) return;
+  document.body.classList.toggle('mgr', isMgr);
+  workerView.style.display = managerView.style.display = noDataMsg.style.display = 'none';
+  selectTankMsg.style.display = 'none';
+  if (pdfUrl) { URL.revokeObjectURL(pdfUrl); pdfUrl = null; }
+  pdfViewer.style.display = 'none'; pdfViewer.removeAttribute('src');
+  emptyState.style.display = 'flex';
+
+  if (!currentTank) { selectTankMsg.style.display = 'flex'; calcHeader.textContent = "🧮 Calculator"; viewerHeader.textContent = "📄 Tank Chart Viewer (manager only)"; return; }
+  const name = tankSelect.selectedOptions[0].text;
+  const chart = await dbGet('data', currentTank);
+  const hasData = chart && Object.keys(chart).length >= 2;
+
+  if (isMgr) {
+    const pdf = await dbGet('pdfs', currentTank);
+    if (pdf) { pdfUrl = URL.createObjectURL(pdf); pdfViewer.src = pdfUrl; pdfViewer.style.display = 'block'; emptyState.style.display = 'none'; viewerHeader.textContent = "📄 Chart: " + name; }
+    else viewerHeader.textContent = "📄 No PDF saved for " + name;
+  }
+  if (hasData && !editing) { workerView.style.display = 'flex'; calcHeader.textContent = isMgr ? "🧮 Calculator (manager view)" : "🧮 Worker Calculator"; }
+  else if (isMgr) { managerView.style.display = 'flex'; calcHeader.textContent = "⚙️ Manager Setup"; fillRows(chart); }
+  else { noDataMsg.style.display = 'flex'; calcHeader.textContent = "🧮 Calculator"; }
+}
+
+/* ---------- Manager setup ---------- */
+function fillRows(chart) {
+  dataRowsContainer.innerHTML = '';
+  const keys = chart ? Object.keys(chart).map(Number).sort((a, b) => a - b) : [];
+  if (keys.length) keys.forEach(k => addDataRow(k, chart[k])); else { addDataRow(960, ""); addDataRow(970, ""); }
+}
+function addDataRow(reading = "", liters = "") {
+  const row = document.createElement('div');
+  row.className = 'data-row';
+  row.innerHTML = `<input type="number" step="any" placeholder="Reading (e.g., 960)" value="${reading}" class="row-reading" aria-label="Reading">
+    <span style="font-weight:bold;color:#8e3a73">=</span>
+    <input type="number" step="any" placeholder="Liters (e.g., 12500)" value="${liters}" class="row-liters" aria-label="Liters">
+    <button class="remove-row" aria-label="Remove row" onclick="this.parentElement.remove()">×</button>`;
+  dataRowsContainer.appendChild(row);
+}
+async function saveChartData() {
+  const chartData = {};
+  document.querySelectorAll('.data-row').forEach(row => {
+    const r = parseFloat(row.querySelector('.row-reading').value), l = parseFloat(row.querySelector('.row-liters').value);
+    if (!isNaN(r) && !isNaN(l)) chartData[r] = l;
+  });
+  if (Object.keys(chartData).length < 2) return showStatus("Enter at least two valid Reading/Liter pairs.", "error");
+  await dbPut('data', chartData, currentTank);
+  editing = false; showStatus("Chart data saved. Worker view is active.", "success"); render();
+}
+async function uploadPDF(event) {
+  const file = event.target.files[0]; event.target.value = '';
+  if (!currentTank) return showStatus("Select a tank first.", "error");
+  if (!file || file.type !== 'application/pdf') return showStatus("Please choose a PDF file.", "error");
+  await dbPut('pdfs', file, currentTank);
+  showStatus("PDF saved in this browser only.", "success"); render();
+}
+async function deleteTankData() {
+  if (!currentTank) return showStatus("Select a tank first.", "error");
+  if (!confirm(`Delete ALL data (PDF & chart values) for ${tankSelect.selectedOptions[0].text}?`)) return;
+  await dbDel('pdfs', currentTank); await dbDel('data', currentTank);
+  editing = false; showStatus("Tank data deleted.", "success"); render();
+}
+
+/* ---------- Backup (chart values only, never PDFs) ---------- */
+async function exportBackup() {
+  const out = {};
+  for (const o of tankSelect.options) if (o.value) { const c = await dbGet('data', o.value); if (c) out[o.value] = c; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "mate-dip", data: out }, null, 2)], { type: 'application/json' }));
+  a.download = "mate-chart-values-backup.json"; a.click();
+}
+async function importBackup(e) {
+  const f = e.target.files[0]; e.target.value = '';
+  try {
+    const j = JSON.parse(await f.text());
+    if (j.app !== "mate-dip" || typeof j.data !== "object") throw 0;
+    for (const k in j.data) await dbPut('data', j.data[k], k);
+    showStatus("Backup restored.", "success"); render();
+  } catch (x) { showStatus("That is not a valid backup file.", "error"); }
+}
+
+/* ---------- Calculation ---------- */
+const fmt = n => n.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const num = n => n.toLocaleString('en-NG');
+async function calculateLiters() {
+  const dip = parseFloat(dipReading.value);
+  if (isNaN(dip)) return showResult(null, "Enter a valid dip reading.");
+  const chart = await dbGet('data', currentTank);
+  if (!chart) return showResult(null, "No chart values for this tank. Ask the manager.");
+  const keys = Object.keys(chart).map(Number).sort((a, b) => a - b);
+  const min = keys[0], max = keys[keys.length - 1];
+  if (dip < min || dip > max) return showResult(null, `Reading ${dip} is outside the chart range (${min} to ${max}).\nCheck the dip and try again.`);
+  if (chart[dip] !== undefined) return showResult(chart[dip], `${dip} is a fixed chart value.`);
+  const lo = Math.max(...keys.filter(k => k < dip)), hi = Math.min(...keys.filter(k => k > dip));
+  const loL = chart[lo], hiL = chart[hi], step = hi - lo, off = dip - lo;
+  const liters = ((hiL - loL) / step) * off + loL;
+  showResult(liters, `${dip} is between ${lo} (${num(loL)} L) and ${hi} (${num(hiL)} L)\n((${num(hiL)} - ${num(loL)}) / ${step}) × ${off} + ${num(loL)}`);
+}
+function showResult(liters, details) {
+  const bad = liters === null;
+  calcResult.className = 'calc-result' + (bad ? ' bad' : '');
+  resultText.textContent = bad ? details : fmt(liters) + ' Liters';
+  resultDetails.textContent = bad ? '' : details;
+  calcResult.style.display = 'block';
+}
+dipReading.addEventListener('keydown', e => { if (e.key === 'Enter') calculateLiters(); });
+dipReading.addEventListener('input', () => { calcResult.style.display = 'none'; });
+
+let statusTimer;
+function showStatus(msg, type) {
+  statusMsg.textContent = msg; statusMsg.className = 'status-msg ' + type;
+  clearTimeout(statusTimer); statusTimer = setTimeout(() => { statusMsg.textContent = ''; }, 4000);
+}
+</script>
+</body>
+</html>
